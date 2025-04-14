@@ -1,0 +1,60 @@
+{
+    "title": "GRANT RFP TEMPLATE",
+    "metadata": {
+      "posting_date": "",
+      "grant_name": "",
+      "solicited_by": "",
+      "address_of_soliciting_party": ""
+    },
+    "sections": {
+      "purpose_of_request_for_proposal": {
+        "content": ""
+      },
+      "organization_background": {
+        "content": ""
+      },
+      "timeline_for_scope_of_services": {
+        "items": [
+          {
+            "activity": "Grant Application Period",
+            "projected_date": ""
+          },
+          {
+            "activity": "Prior to Final Grant Submissions",
+            "projected_date": ""
+          },
+          {
+            "activity": "After Final Grant Submissions",
+            "projected_date": ""
+          },
+          {
+            "activity": "Underwriting Period",
+            "projected_date": ""
+          },
+          {
+            "activity": "Underwriting Review",
+            "projected_date": ""
+          },
+          {
+            "activity": "Revisions and Final Report",
+            "projected_date": ""
+          }
+        ]
+      },
+      "scope_of_services": {
+        "grant_application_period": "",
+        "prior_to_final_grant_submissions": "",
+        "after_final_grant_submissions": "",
+        "underwriting_period": "",
+        "underwriting_review": "",
+        "revisions_and_final_report": ""
+      },
+      "submission_process": {
+        "content": ""
+      },
+      "questions_inquiries_information": {
+        "content": ""
+      }
+    },
+    "output_filename": "grant_rfp.pdf"
+  }
