@@ -8,6 +8,8 @@ from Chatbot.Mistral_7b import retrieve_faiss, retrieve_context
 from transformers import pipeline, AutoProcessor
 from byaldi import RAGMultiModalModel
 from bedrock_handler import call_claude
+from create_grant_proposal import create_grant_proposal_from_json
+from create_rfp_proposal import create_rfp_proposal_from_json
 
 # ==================================================
 # CONFIGURATION & PATHS
@@ -250,9 +252,9 @@ def generate_grant_proposal_from_headings(db, docs_retrieval_model, all_images, 
 
     # Step 8: Create the PowerPoint presentation from the JSON data
     if template_type == "proposal":
-        output_path = create_grant_proposal_template(report_json)
+        output_path = create_grant_proposal_from_json(report_json)
     elif template_type == "rfp":
-        output_path = create_rfp_template(report_json)
+        output_path = create_rfp_proposal_from_json(report_json)
 
     return output_path
 
