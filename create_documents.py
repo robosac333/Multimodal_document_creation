@@ -15,10 +15,10 @@ from typing import Dict, List
 # ==================================================
 # CONFIGURATION & PATHS
 # ==================================================
-DATA_PATH = "/nfshomes/sjd3333/sarang_testing/pdfs"
-FAISS_DB_PATH = "/nfshomes/sjd3333/sarang_testing/vector_data_base"
-IMAGES_FOLDER = "/nfshomes/sjd3333/sarang_testing/img_output"
-OUTPUT_FOLDER = "/nfshomes/sjd3333/sarang_testing/Final_slide"
+DATA_PATH = "path to a folder called pdfs"
+FAISS_DB_PATH = "path to a folder called vector_data_base"
+IMAGES_FOLDER = "path to a folder called img_output"
+OUTPUT_FOLDER = "path to a folder called Final_slide"
 
 # ==================================================
 # 1. PDF Conversion Caching
