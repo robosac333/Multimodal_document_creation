@@ -84,8 +84,8 @@ This automated pipeline ensures quick, scalable, and accurate document generatio
 ## Installation
 
 ```bash
-git clone <repository_url>
-cd <repository_directory>
+git clone https://github.com/robosac333/Multimodal_document_creation.git
+cd Multimodal_document_creation
 pip install -r requirements.txt
 ```
 
