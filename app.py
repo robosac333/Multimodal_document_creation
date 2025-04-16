@@ -7,8 +7,8 @@ import os
 import time
 
 # Fixed JSON path for payload
-temp_path = "/nfshomes/sjd3333/sarang_testing/tmp_payload.json"
-temp_slide_path = "/nfshomes/sjd3333/sarang_testing/tmp_slide_prompt.json"
+temp_path = "edit the path of the temp_path created through streamlit for grant_proposal."
+temp_slide_path = "edit the path of the temp_slide_path created through streamlit for slide_generation."
 
 
 # Function to trigger generation
@@ -227,7 +227,7 @@ with tab_slides:
 
         if triggered:
             st.success("The Presentation has began to cook!")
-            pptx_output_path = "/nfshomes/sjd3333/sarang_testing/Final_slide/Generated_Presentation.pptx"
+            pptx_output_path = "assign an output path"
 
             for remaining in range(300, 0, -1):  # 5-minute timeout
                 minutes, seconds = divmod(remaining, 60)
@@ -362,7 +362,7 @@ with tab_grant:
 
             if triggered:
                 st.success("We have started to cook the grant proposal")
-                docx_output_path = "/nfshomes/sjd3333/sarang_testing/Final_Grant_Proposal.docx"
+                docx_output_path = "assign an output path"
                 countdown_placeholder = st.empty()
                 download_placeholder = st.empty()
 
