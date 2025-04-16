@@ -1,0 +1,60 @@
+{
+    "IC-Grant-Application": [
+        "background",
+        "impact",
+        "project_abstract",
+        "goals_and_objectives",
+        "methodology",
+        "proposal_summary",
+        "introduction",
+        "statement_of_need",
+        "timeline",
+        "activities",
+        "evaluation",
+        "staff_qualifications",
+        "communication",
+        "sustainability",
+        "budget_justification",
+        "conclusion",
+        "appendix"
+    ],
+    "IC-Technology-Grant-Proposal": [
+        "vision_statement",
+        "educational_issue_statement",
+        "yearly_objectives",
+        "sustainability_and_feasibility",
+        "personal_statement",
+        "project_abstract",
+        "timeline",
+        "budget",
+        "project_team",
+        "conclusion",
+        "appendix"
+    ],
+    "Non-Profit-Grant-Proposal": [
+        "statement_of_problem",
+        "goals_and_objectives",
+        "target_population",
+        "project_activities",
+        "key_staff",
+        "success_criteria",
+        "organization_background",
+        "current_programs",
+        "affiliations",
+        "timeline",
+        "budget",
+        "evaluation",
+        "appendix"
+    ],
+    "Generic-Grant-Proposal": [
+        "project_abstract",
+        "statement_of_need",
+        "program_description",
+        "goals_and_objectives",
+        "timeline",
+        "budget",
+        "evaluation",
+        "staff_organizational_info",
+        "appendix"
+    ]
+}
