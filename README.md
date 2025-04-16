@@ -93,7 +93,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Update paths in `app.py` and the main Python script (`run_generation.py`):
+Update paths in `app.py` and `create_documents.py`. Run `app.py` after that.
 
 ### In `app.py`:
 
