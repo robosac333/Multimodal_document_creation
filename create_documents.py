@@ -7,7 +7,7 @@ from image_retrieval import convert_pdfs_to_images, load_existing_image_mappings
 from Chatbot.Mistral_7b import retrieve_faiss, retrieve_context
 from transformers import pipeline, AutoProcessor
 from byaldi import RAGMultiModalModel
-from bedrock_handler import call_claude
+from bedrock_handler import call_claude, call_claude_image
 from docx import Document
 from typing import Dict, List
 
@@ -15,10 +15,10 @@ from typing import Dict, List
 # ==================================================
 # CONFIGURATION & PATHS
 # ==================================================
-DATA_PATH = "path to a folder called pdfs"
-FAISS_DB_PATH = "path to a folder called vector_data_base"
-IMAGES_FOLDER = "path to a folder called img_output"
-OUTPUT_FOLDER = "path to a folder called Final_slide"
+DATA_PATH = "/nfshomes/sjd3333/Multimodal_document_creation/pdfs"
+FAISS_DB_PATH = "/nfshomes/sjd3333/Multimodal_document_creation/vector_data_base"
+IMAGES_FOLDER = "/nfshomes/sjd3333/Multimodal_document_creation/img_output"
+OUTPUT_FOLDER = "/nfshomes/sjd3333/Multimodal_document_creation/Final_slide"
 
 # ==================================================
 # 1. PDF Conversion Caching
@@ -75,10 +75,10 @@ def create_or_load_vector_db(data_path, faiss_db_path, force_rebuild=False):
 # ==================================================
 def initialize_models():
     docs_retrieval_model = RAGMultiModalModel.from_pretrained("vidore/colpali-v1.2")
-    model_id = "llava-hf/llava-1.5-7b-hf"
-    pipe = pipeline("image-to-text", model=model_id, device=0)
-    processor = AutoProcessor.from_pretrained(model_id)
-    return docs_retrieval_model, pipe, processor
+    # model_id = "llava-hf/llava-1.5-7b-hf"
+    # pipe = pipeline("image-to-text", model=model_id, device=0)
+    # processor = AutoProcessor.from_pretrained(model_id)
+    return docs_retrieval_model
 
 # ==================================================
 # 5. Text Context Retrieval
@@ -95,18 +95,18 @@ def retrieve_text_context(slide_headings_text, db, docs_retrieval_model):
 # ==================================================
 # 6. Image Processing & Description
 # ==================================================
-def generate_image_description(img, pipe, processor):
-    chat_template = [
-        {"role": "user", "content": [
-            {"type": "image", "image": img},
-            {"type": "text", "text": "Briefly describe the image."}
-        ]}
-    ]
-    prompt = processor.apply_chat_template(chat_template, add_generation_prompt=True)
-    outputs = pipe(img, prompt=prompt, generate_kwargs={"max_new_tokens": 200})
-    return outputs[0]["generated_text"].split("ASSISTANT:")[-1].strip()
+# def generate_image_description(img, pipe, processor):
+#     chat_template = [
+#         {"role": "user", "content": [
+#             {"type": "image", "image": img},
+#             {"type": "text", "text": "Briefly describe the image."}
+#         ]}
+#     ]
+#     prompt = processor.apply_chat_template(chat_template, add_generation_prompt=True)
+#     outputs = pipe(img, prompt=prompt, generate_kwargs={"max_new_tokens": 200})
+#     return outputs[0]["generated_text"].split("ASSISTANT:")[-1].strip()
 
-def get_combined_image_context(colpali_docs, all_images, pipe, processor):
+def get_combined_image_context(colpali_docs, all_images):
     image_contexts = []
     image_path_map = {}
     for idx, result in enumerate(colpali_docs):
@@ -114,7 +114,7 @@ def get_combined_image_context(colpali_docs, all_images, pipe, processor):
         image_files = all_images.get(doc_id, [])
         if page_num - 1 < len(image_files):
             img_path = image_files[page_num - 1]
-            description = generate_image_description(img_path, pipe, processor)
+            description = call_claude_image(img_path)
             image_contexts.append(description)
             image_path_map[idx] = img_path  # Associate slide index with image path
 
@@ -240,7 +240,7 @@ def create_universal_grant_docx(
 # ==================================================
 def generate_slides_from_headings(structured_input):
     all_images, file_names = convert_pdfs_if_needed(DATA_PATH, IMAGES_FOLDER)
-    docs_retrieval_model, pipe, processor = initialize_models()
+    docs_retrieval_model = initialize_models()
     docs_retrieval_model = index_documents_if_needed(docs_retrieval_model, DATA_PATH, "image_index", force_reindex=True)
     db = create_or_load_vector_db(DATA_PATH, FAISS_DB_PATH, force_rebuild=False)
 
@@ -251,7 +251,7 @@ def generate_slides_from_headings(structured_input):
     query_string = f"{purpose}\n{subtype}\n" + "\n".join(answers.values())
 
     text_context, colpali_docs = retrieve_text_context(query_string, db, docs_retrieval_model)
-    image_context, image_path_map = get_combined_image_context(colpali_docs, all_images, pipe, processor)
+    image_context, image_path_map = get_combined_image_context(colpali_docs, all_images)
 
     slides_data = generate_slides_json(structured_input, text_context, image_context)
     output_path = create_presentation_from_json(slides_data, OUTPUT_FOLDER, image_path_map=image_path_map)
@@ -263,7 +263,7 @@ def generate_slides_from_headings(structured_input):
 # ==================================================
 def generate_grant_from_inputs(user_prompt_json):
     all_images, _ = convert_pdfs_if_needed(DATA_PATH, IMAGES_FOLDER)
-    docs_retrieval_model, pipe, processor = initialize_models()
+    docs_retrieval_model = initialize_models()
     docs_retrieval_model = index_documents_if_needed(docs_retrieval_model, DATA_PATH, "image_index", force_reindex=True)
     db = create_or_load_vector_db(DATA_PATH, FAISS_DB_PATH, force_rebuild=False)
 
@@ -286,7 +286,7 @@ def generate_grant_from_inputs(user_prompt_json):
     print("Query string:", query_string[:200])
     print("Retrieved Colpali docs:", len(colpali_docs))
 
-    image_context, _ = get_combined_image_context(colpali_docs, all_images, pipe, processor)
+    image_context, _ = get_combined_image_context(colpali_docs, all_images)
 
     template_name = user_prompt_json.get("template_name", "")
     if not template_name:

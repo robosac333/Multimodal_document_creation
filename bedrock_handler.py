@@ -162,3 +162,58 @@ Begin now.
         print("\n==================================================\n")
 
     return clean_output
+
+
+def call_claude_image(image_path):
+    """
+    For sending a request to AWS Bedrock to generate a response from Claude.
+    """
+    # Combine the context documents into a single text block to include in the prompt.
+    query = "Give a detailed description of the image."
+    
+    with open(image_path, "rb") as image_file:
+        image = image_file.read()
+        # Encode the image to base64
+        image = base64.b64encode(image_file.read()).decode('utf-8')
+
+    media_type = None
+    if image.startswith('/9j/'):
+        return 'image/jpeg'
+    elif image.startswith('iVBOR'):
+        return 'image/png'
+    else:
+        # Default to jpeg as fallback
+        return 'image/jpeg'
+
+    # Create a structured input for the model with a clear prompt, context, and user query.
+    input_text = (
+        "\n\nUser: " + query + 
+        "\nBot:"
+    )
+
+
+    payload = {
+    "anthropic_version": "bedrock-2023-05-31", 
+    "max_tokens": 2500,
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                { "type": "image", "source": { "type": "base64", "media_type": "image/jpeg", "data": image } },
+                { "type": "text", "text": query }
+            ]
+
+        }]
+    }
+    
+    response = bedrock_client.invoke_model(
+        body=json.dumps(payload),
+        modelId="anthropic.claude-3-sonnet-20240229-v1:0",
+        contentType="application/json",
+        accept="application/json"
+    )
+    
+    response_body = json.loads(response['body'].read())
+    answer = response_body['content'][0]['text']
+
+    return answer.strip().split("\nBot:")[-1].strip()
